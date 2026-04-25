@@ -169,3 +169,14 @@ This document records the work completed in this Codex session for `python-som`.
   - static model plot path
   - animation overlay path.
 - Verified marker format strings in `som.py` now use `"wx"` for BMU `X`.
+
+13. Retrospective observation on original code structure
+- User asked whether the original structure was clear enough for porting.
+- Conclusion recorded:
+  - Yes, structure was clear enough to translate directly to 1D.
+  - What helped:
+    - utility functions were modularized (`init`, `BMU`, `neighborhood`, plotting)
+    - training loop stages were explicit and easy to map
+    - comments around row/col indexing and plotting intent were useful.
+  - Minor friction:
+    - original `som_bmu` reliance on global `n` (already fixed earlier in session).

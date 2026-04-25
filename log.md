@@ -142,3 +142,30 @@ This document records the work completed in this Codex session for `python-som`.
   - green circle = BMU location in lattice coordinates
   - small circles = neuron weight positions.
 
+## Session Continuation (After Initial Log)
+
+10. Commit/push of generated and updated files
+- User requested staging source/markdown files and pushing.
+- Committed and pushed to `main`:
+  - Commit: `24d0fc6`
+  - Message: `Add 1D SOM files, animation updates, and session docs`
+- Push result:
+  - `main -> main` on `github.com:yschoe/python-som.git`.
+
+11. `som.py` animation layout change (two-panel -> overlay)
+- User requested that final animation match notebook-style overlay:
+  - background neighborhood heatmap in SOM grid coordinates
+  - overlaid input-space SOM weights and markers in same panel.
+- Updated `som_animate` in `som.py`:
+  - replaced two subplots with one axes
+  - draws `imshow(neigh_mat)` first, then overlays grid/input/BMU markers
+  - kept iteration/alpha/radius in title.
+- Verified:
+  - syntax check (`python3 -m py_compile som.py`) passed.
+
+12. BMU marker color revert in `som.py`
+- User requested BMU marker color in `som.py` be changed back to white.
+- Updated BMU `X` marker from `"mx"` back to `"wx"` in:
+  - static model plot path
+  - animation overlay path.
+- Verified marker format strings in `som.py` now use `"wx"` for BMU `X`.

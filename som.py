@@ -183,7 +183,7 @@ def som_plot_model(k,x,bmu,W0,W1,n,neigh_mat,alpha,radius):
   plt.plot(bmu[1],bmu[0],"go",markersize=7) # bmu0 is row, bmu1 is col, so bmu0 = y, bmu1 = x
 
   # mark BMU on grid (input space)
-  plt.plot(W0[bmu[0],bmu[1]]*n,W1[bmu[0],bmu[1]]*n,"mx",markersize=20) # bmu0 is row, bmu1 is col, so bmu0 = y, bmu1 = x
+  plt.plot(W0[bmu[0],bmu[1]]*n,W1[bmu[0],bmu[1]]*n,"wx",markersize=20) # bmu0 is row, bmu1 is col, so bmu0 = y, bmu1 = x
 
 
 
@@ -191,7 +191,7 @@ def som_plot_model(k,x,bmu,W0,W1,n,neigh_mat,alpha,radius):
 
 
 #---------------------------------------------------------------------
-def som_animate(history, n, interval_ms=700):
+def som_animate(history, n, interval_ms=1000):
 #---------------------------------------------------------------------
   '''
   Animate saved SOM snapshots after training.
@@ -207,38 +207,38 @@ def som_animate(history, n, interval_ms=700):
   if len(history) == 0:
     return None
 
-  fig, axs = plt.subplots(1, 2, figsize=(12, 5))
+  fig, ax = plt.subplots(1, 1, figsize=(7, 6))
   neigh_max = max(np.max(frame["neigh_mat"]) for frame in history)
   neigh_max = max(neigh_max, 1e-12)
 
   def _update(frame_idx):
     frame = history[frame_idx]
 
-    axs[0].clear()
-    axs[1].clear()
+    ax.clear()
 
-    axs[0].imshow(frame["neigh_mat"], vmin=0.0, vmax=neigh_max)
-    axs[0].set_title("Neighborhood @ iter " + str(frame["k"]))
-
-    som_w_plot(frame["W0"] * n, frame["W1"] * n, ax=axs[1])
-    axs[1].plot(frame["x"][0] * n, frame["x"][1] * n, "r*", markersize=15)
-    axs[1].plot(frame["bmu"][1], frame["bmu"][0], "go", markersize=7)
-    axs[1].plot(
+    # Overlay style (as in notebook plotting):
+    # neighborhood heatmap in grid coordinates + weight/input plots in input space.
+    ax.imshow(frame["neigh_mat"], vmin=0.0, vmax=neigh_max)
+    som_w_plot(frame["W0"] * n, frame["W1"] * n, ax=ax)
+    ax.plot(frame["x"][0] * n, frame["x"][1] * n, "r*", markersize=15)
+    ax.plot(frame["bmu"][1], frame["bmu"][0], "go", markersize=7)
+    ax.plot(
       frame["W0"][frame["bmu"][0], frame["bmu"][1]] * n,
       frame["W1"][frame["bmu"][0], frame["bmu"][1]] * n,
-      "mx",
+      "wx",
       markersize=20,
     )
-    axs[1].set_title(
-      "Input = " + str(frame["x"]) +
+    ax.set_title(
+      "Iter " + str(frame["k"]) +
+      " | Input = " + str(frame["x"]) +
       "\nalpha=" + str(frame["alpha"]) +
       ", radius=" + str(frame["radius"])
     )
-    axs[1].set_xlim([0, n])
-    axs[1].set_ylim([0, n])
-    axs[1].invert_yaxis()
+    ax.set_xlim([0, n])
+    ax.set_ylim([0, n])
+    ax.invert_yaxis()
 
-    return axs
+    return [ax]
 
   ani = FuncAnimation(fig, _update, frames=len(history), interval=interval_ms, repeat=True)
   plt.tight_layout()
